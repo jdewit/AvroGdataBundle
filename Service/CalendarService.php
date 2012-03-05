@@ -2,7 +2,6 @@
 namespace Avro\GdataBundle\Service;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Zend\GData;
 
 class CalendarService
 {
@@ -13,25 +12,23 @@ class CalendarService
     {
         $this->context = $context;    
 
-        $service = new GData\Calendar();
-        $serviceName = $service::AUTH_SERVICE_NAME;
+        $service = \Zend_Gdata_Calendar::AUTH_SERVICE_NAME;
         
         $user = "jorisdewitblackberry@gmail.com";
         $pass = "sf2champ*";
          
         // Create an authenticated HTTP client
-        $clientLogin = new GData\ClientLogin();
-        
-        $client = $clientLogin::getHttpClient($user, $pass, $serviceName);
+        $client = \Zend_Gdata_ClientLogin::getHttpClient($user, $pass, $service);
          
         // Create an instance of the Calendar service
-        $this->service = new GData\Calendar($client);
+        $this->service = new \Zend_Gdata_Calendar($client);
+
     }
 
     public function getCalendarListFeed() {
         try {
             $listFeed= $this->service->getCalendarListFeed();
-        } catch (GData\App\Exception $e) {
+        } catch (Zend_Gdata_App_Exception $e) {
             echo "Error: " . $e->getMessage();
         }
 
