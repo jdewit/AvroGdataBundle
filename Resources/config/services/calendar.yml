@@ -2,4 +2,4 @@
 services:
     avro_gdata.calendar_service:
         class: Avro\GdataBundle\Service\CalendarService
-        arguments: ["@security.context"]
+        arguments: ["@pierrre_encrypter.manager"]

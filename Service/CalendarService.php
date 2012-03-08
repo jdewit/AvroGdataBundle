@@ -5,29 +5,42 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class CalendarService
 {
-    protected $context;
-    protected $service;
+    protected $encrypter;
 
-    public function __construct(SecurityContextInterface $context)
+    public function __construct($encrypter)
     {
-        $this->context = $context;    
+        $this->encrypter = $encrypter->get('avro_encrypter');
+    }
+
+    public function getService($user) {
+        $username = $user->getGmailUser();
+        $password = $user->getGmailPassword();
+
+        if (!$username || !$password) { 
+            return false;
+        }
+        $password = $this->encrypter->decrypt($user->getGmailPassword());
+    
+        if (!$username || !$password) {
+            throw new \Exception('Unable to add event. Gmail settings have not been set.');
+        }
 
         $service = \Zend_Gdata_Calendar::AUTH_SERVICE_NAME;
-        
-        $user = "jorisdewitblackberry@gmail.com";
-        $pass = "sf2champ*";
          
         // Create an authenticated HTTP client
-        $client = \Zend_Gdata_ClientLogin::getHttpClient($user, $pass, $service);
+        $client = \Zend_Gdata_ClientLogin::getHttpClient($username, $password, $service);
          
         // Create an instance of the Calendar service
-        $this->service = new \Zend_Gdata_Calendar($client);
+        return new \Zend_Gdata_Calendar($client);
+    }
+
+    public function testCredentials($user) {
 
     }
 
     public function getCalendarListFeed() {
         try {
-            $listFeed= $this->service->getCalendarListFeed();
+            $listFeed= $service->getCalendarListFeed();
         } catch (Zend_Gdata_App_Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -35,62 +48,96 @@ class CalendarService
         return $listFeed;
     }
 
-    public function createEvent(array $options) {
-        $event= $this->service->newEventEntry();
+    public function createEvent($user, array $options) {
+        $service = $this->getService($user);
+
+        if (!$service) {
+            return false;
+        }
+
+        $event= $service->newEventEntry();
          
-        // Populate the event with the desired information
-        // Note that each attribute is crated as an instance of a matching class
-        $event->title = $this->service->newTitle("My Event");
-        $event->where = array($this->service->newWhere("Mountain View, California"));
-        $event->content =
-            $this->service->newContent(" This is my awesome event. RSVP required.");
+        $options['timezoneOffset'] = $user->getOwner()->getTimezoneOffset();
+        $event = $this->writeEvent($service, $event, $options);
          
-        // Set the date using RFC 3339 format.
-        $startDate = "2008-01-20";
-        $startTime = "14:00";
-        $endDate = "2008-01-20";
-        $endTime = "16:00";
-        $tzOffset = "-08";
-         
-        $when = $this->service->newWhen();
-        $when->startTime = "{$startDate}T{$startTime}:00.000{$tzOffset}:00";
-        $when->endTime = "{$endDate}T{$endTime}:00.000{$tzOffset}:00";
-        $event->when = array($when);
-         
-        // Upload the event to the calendar server
-        // A copy of the event as it is recorded on the server is returned
-        $newEvent = $this->service->insertEvent($event);
+        try {
+            $event = $service->insertEvent($event);
+        } catch (Zend_Gdata_App_Exception $e) {
+            throw new \Exception("Error: " . $e->getMessage());
+        }
+        $url =  $event->id->text;
+        $id = explode("/", $url);
+        
+        return array_pop($id);
     }
 
-    public function quickAdd(array $options) {
-        // Create a new entry using the calendar service's magic factory method
-        $event= $this->service->newEventEntry();
-         
-        // Populate the event with the desired information
-        $event->content= $this->service->newContent("Dinner at Joe's Diner on Thursday");
-        $event->quickAdd = $this->service->newQuickAdd("true");
-         
-        // Upload the event to the calendar server
-        // A copy of the event as it is recorded on the server is returned
-        $newEvent = $this->service->insertEvent($event);
-    }
+    public function editEvent($user, $options) {
+        $service = $this->getService($user);
 
-    public function editEvent($event) {
-        // Get the first event in the user's event list
-        $event = $eventFeed[0];
-         
-        // Change the title to a new value
-        $event->title = $service->newTitle("Woof!");
-         
-        // Upload the changes to the server
+        if (!$service) {
+            return false;
+        }
+
+        $event = $this->getEvent($service, $options['id']);
+
+        $options['timezoneOffset'] = $user->getOwner()->getTimezoneOffset();
+
+        $event = $this->writeEvent($service, $event, $options);
+
         try {
             $event->save();
         } catch (Zend_Gdata_App_Exception $e) {
-            echo "Error: " . $e->getMessage();
+            throw new \Exception("Error: " . $e->getMessage());
         }
     }
 
-    public function deleteEvent($event) {
-        $event->delete();
+    public function getEvent($service, $id) {
+        $query = $service->newEventQuery();
+        $query->setUser('default');
+        $query->setVisibility('private');
+        $query->setProjection('full');
+        $query->setEvent($id);
+         
+        try {
+            $event = $service->getCalendarEventEntry($query);
+        } catch (Zend_Gdata_App_Exception $e) {
+            throw new \Exception("Error: " . $e->getMessage());
+        }        
+        
+        return $event;
+    }
+        
+    public function writeEvent($service, $event, $options) {
+        $event->title = $service->newTitle($options['title']);
+        $event->where = array($service->newWhere($options['where']));
+        $event->content = $service->newContent($options['content']);
+        // Set the date using RFC 3339 format.
+        $startDate = $options['startDate'];
+        $startTime = $this->convertTime($options['startTime']);
+        $endDate = $options['endDate'];
+        $endTime = $this->convertTime($options['endTime']);
+        $tzOffset = $options['timezoneOffset'];
+        $when = $service->newWhen();
+        $when->startTime = "{$startDate}T{$startTime}:00.000{$tzOffset}:00";
+        $when->endTime = "{$endDate}T{$endTime}:00.000{$tzOffset}:00";
+        $event->when = array($when);
+
+        return $event;
+    }
+
+    public function deleteEvent($user, $id) {
+        $service = $this->getService($user);
+        $this->getEvent($service, $id)->delete();
+    }
+
+    /*
+     * Convert time to 24hr if necessary
+     */
+    public function convertTime($time) {
+        if (substr($time, 7, 7) == 'm') {
+            $time = DATE("H:i", STRTOTIME($time));
+        } 
+
+        return $time;
     }
 }

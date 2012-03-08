@@ -1,5 +1,36 @@
 AvroGdataBundle
 ====================
+Symfony2 bundle for Zend V1.11.11 Gdata
+
+Usage
+=====
+Create a new event
+$this->container->get('avro_gdata.calendar_service')->addEvent($user, $options);
+
+Edit an event
+$this->container->get('avro_gdata.calendar_service')->editEvent($user, $options);
+
+Delete an event
+$this->container->get('avro_gdata.calendar_service')->deleteEvent($user, $options);
+
+$user object 
+-gmailUser 
+-gmailPassword
+
+$options array
+-startDate
+-endDate
+-startTime
+-endTime
+-tzOffset
+-content
+-title
+
+Requirements
+============
+- <a href="http://framework.zend.com/">Zend Framework</a>
+
+- <a href="https://github.com/pierrre/PierrreEncrypterBundle">Pierre EncrypterBundle</a> for 2 way encrypting of users gmail password
 
 Installation
 ============
@@ -25,7 +56,7 @@ Enable the bundle in the kernel:
 
 ```
 [AvroGdataBundle]
-    git=git://github.com/yourGitHubAccount.git
+    git=git://github.com:jdewit/AvroGdataBundle.git
     target=bundles/Avro/GdataBundle
 ```
 
