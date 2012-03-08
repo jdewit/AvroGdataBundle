@@ -5,18 +5,25 @@ Symfony2 bundle for Zend V1.11.11 Gdata
 Usage
 =====
 Create a new event
-```php
+
+``` php
 $this->container->get('avro_gdata.calendar_service')->addEvent($user, $options);
 ```
+
 Edit an event
-```php
+
+``` php
 $this->container->get('avro_gdata.calendar_service')->editEvent($user, $options);
 ```
+
 Delete an event
-```php
+
+``` php
 $this->container->get('avro_gdata.calendar_service')->deleteEvent($user, $options);
 ```
+
 User object
+
 ``` php
 class User 
 {
@@ -29,7 +36,8 @@ class User
 ```
 
 Event options array
-```php
+
+``` php
 $options = array(
     'id', 
     'startDate',
