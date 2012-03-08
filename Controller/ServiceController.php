@@ -10,20 +10,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Area controller.
+ * Service controller.
  *
  * @Route("/service")
  */
 class ServiceController extends ContainerAware
 {
      /**
-     * Get areas.
+     * Test user credentials.
      *
-     * @Route("/testCredentials", name="avro_gdata_service_testCredentials")
+     * @Route("/testCredentials/{id}", name="avro_gdata_service_testCredentials")
      * @method("post")     
      */
-    public function testCredentialsAction($filter)
+    public function testCredentialsAction($id)
     {
+        //TODO
         $this->container->get('avro_gdata.calendar_service')->getService($user);
     }
 }
