@@ -63,10 +63,23 @@ Enable the bundle in the kernel:
     new Avro\GdataBundle\AvroGdataBundle
 ```
 
-```
+``` php
 [AvroGdataBundle]
     git=git://github.com:jdewit/AvroGdataBundle.git
     target=bundles/Avro/GdataBundle
+```
+
+Add to routing.yml
+
+``` php
+AvroGdataBundle:
+    resource: "@AvroGdataBundle/Resources/config/routing.yml"
+```
+
+Add to config.yml
+
+``` php
+    - { resource: '@AvroGdataBundle/Resources/config/config.yml' }
 ```
 
 Now, run the vendors script to download the bundle:
