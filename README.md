@@ -35,20 +35,6 @@ Delete an event
     $this->container->get('avro_gdata.calendar.manager')->deleteEvent($service, $options);
 ```
 
-options array
-``` php
-$options = array(
-    'id', 
-    'startDate',
-    'endDate',
-    'startTime',
-    'endTime',
-    'tzOffset',
-    'content',
-    'title'
-)
-```
-
 Requirements
 ============
 - <a href="http://framework.zend.com/">Zend Framework</a>
