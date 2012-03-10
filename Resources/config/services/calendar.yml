@@ -1,5 +1,0 @@
-#crew     
-services:
-    avro_gdata.calendar_service:
-        class: Avro\GdataBundle\Service\CalendarService
-        arguments: ["@pierrre_encrypter.manager"]
