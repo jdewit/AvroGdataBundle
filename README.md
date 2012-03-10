@@ -4,38 +4,38 @@ Symfony2 bundle for Zend V1.11.11 Gdata
 
 Usage
 =====
+
+Get google http client instance
+
+``` php
+    $client = $this->container->get('avro_gdata.authenticator')->getClient($username, $password);
+```
+
+Get calendar service
+
+```php
+    $service = $this->container->get('avro_gdata.authenticator')->getCalendarService($username, $password);
+```
+
 Create a new event
 
 ``` php
-$this->container->get('avro_gdata.calendar_service')->addEvent($user, $options);
+    $this->container->get('avro_gdata.calendar.manager')->createEvent($service, $options);
 ```
 
 Edit an event
 
 ``` php
-$this->container->get('avro_gdata.calendar_service')->editEvent($user, $options);
+    $this->container->get('avro_gdata.calendar.manager')->editEvent($service, $options);
 ```
 
 Delete an event
 
 ``` php
-$this->container->get('avro_gdata.calendar_service')->deleteEvent($user, $options);
+    $this->container->get('avro_gdata.calendar.manager')->deleteEvent($service, $options);
 ```
 
-User object
-
-``` php
-class User 
-{
-    protected $gmailUser;
-
-    protected $gmailPassword;
-
-    //...getters & setters
-}
-```
-
-Event options array
+options array
 ``` php
 $options = array(
     'id', 
