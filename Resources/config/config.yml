@@ -1,2 +1,8 @@
-imports:
-    - { resource: '@AvroGdataBundle/Resources/config/services/calendar.yml' }
+services:
+    avro_gdata.authenticator:
+        class: Avro\GdataBundle\Util\Authenticator
+        arguments: ["@pierrre_encrypter.manager"]
+
+    avro_gdata.calendar.manager:
+        class: Avro\GdataBundle\Util\CalendarManager
+

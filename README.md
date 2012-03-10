@@ -36,7 +36,6 @@ class User
 ```
 
 Event options array
-
 ``` php
 $options = array(
     'id', 

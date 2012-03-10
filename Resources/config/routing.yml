@@ -1,0 +1,4 @@
+avro_gdata_authentication:
+    resource: "@AvroGdataBundle/Controller/AuthenticationController.php"
+    type:     annotation 
+
