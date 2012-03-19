@@ -1,0 +1,21 @@
+{
+    "name": "avro/gdata-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 Gdata Bundle",
+    "keywords": ["gdata"],
+    "homepage": "http://github.com/avro/GdataBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joris de Wit",
+            "email": "joris.w.dewit@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": { "Avro\\GdataBundle": "" }
+    },
+    "target-dir": "Avro/GdataBundle"
+}
