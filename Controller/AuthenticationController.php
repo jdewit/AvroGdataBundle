@@ -24,9 +24,6 @@ class AuthenticationController extends ContainerAware
      */
     public function testAction()
     {
-        $taskManager = $this->container->get('application_crm.task_manager');
-        $clientManager = $this->container->get('application_crm.client_manager');
-        
         $username = $this->container->get('request')->get('googleUsername');
         $password = $this->container->get('request')->get('googlePassword');
 
