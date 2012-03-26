@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Zend\Gdata\HttpClient;
 
 /**
  * Service controller.
@@ -20,7 +21,6 @@ class AuthenticationController extends ContainerAware
      * Test user credentials.
      *
      * @Route("/test", name="avro_gdata_authentication_test")
-     * @method("post")     
      */
     public function testAction()
     {
@@ -30,7 +30,7 @@ class AuthenticationController extends ContainerAware
         try {
             $client = $this->container->get('avro_gdata.authenticator')->getClient($username, $password, false);
 
-            if ($client instanceof \Zend_Gdata_HttpClient) {
+            if ($client instanceof HttpClient) {
                 $response = new Response('{"status": "OK", "notice": "Connected!"}');
             }
         } catch (\Exception $e) {

@@ -2,6 +2,7 @@
 namespace Avro\GdataBundle\Util;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Zend\Gdata\App;
 
 /*
  * Helper class for Zend Gdata Calendar
@@ -20,7 +21,7 @@ class CalendarManager
     public function getCalendarListFeed($service) {
         try {
             $listFeed= $service->getCalendarListFeed();
-        } catch (\Zend_Gdata_App_Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
 
@@ -41,7 +42,7 @@ class CalendarManager
          
         try {
             $event = $service->insertEvent($event);
-        } catch (\Zend_Gdata_App_Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
         $url =  $event->id->text;
@@ -60,11 +61,12 @@ class CalendarManager
      */
     public function editEvent($service, $options) {
         $event = $this->getEvent($service, $options['id']);
+        print_r($event); exit;
         $event = $this->writeEvent($service, $event, $options);
 
         try {
             $event->save();
-        } catch (\Zend_Gdata_App_Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
 
@@ -85,10 +87,10 @@ class CalendarManager
         $query->setVisibility('private');
         $query->setProjection('full');
         $query->setEvent($id);
-         
+
         try {
             $event = $service->getCalendarEventEntry($query);
-        } catch (\Zend_Gdata_App_Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }        
         
@@ -108,7 +110,6 @@ class CalendarManager
         $event->title = $service->newTitle($options['title']);
         $event->where = array($service->newWhere($options['where']));
         $event->content = $service->newContent($options['content']);
-
         // Set the date using RFC 3339 format.
         $startDate = $options['startDate'];
         $startTime = $this->convertTime($options['startTime']);
@@ -135,7 +136,7 @@ class CalendarManager
     public function deleteEvent($service, $id) {
         try {
             $this->getEvent($service, $id)->delete();
-        } catch (\Zend_Gdata_App_Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }     
 

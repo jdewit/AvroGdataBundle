@@ -3,6 +3,9 @@ namespace Avro\GdataBundle\Util;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Pierrre\EncrypterBundle\Util\EncrypterManager;
+use Zend\GData\ClientLogin;
+use Zend\GData\Calendar;
+use Zend\GData\App;
 
 /*
  * Zend Gdata authentication helper class
@@ -37,8 +40,8 @@ class Authenticator
         }
     
         try {
-            $client = \Zend_Gdata_ClientLogin::getHttpClient($username, $password, \Zend_Gdata_Calendar::AUTH_SERVICE_NAME);
-        } catch (\Zend_Gdata_App_Exception $e) {
+            $client = ClientLogin::getHttpClient($username, $password, Calendar::AUTH_SERVICE_NAME);
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
 
@@ -56,6 +59,6 @@ class Authenticator
     public function getCalendarService($username, $password) {
         $client = $this->getClient($username, $password);
 
-        return new \Zend_Gdata_Calendar($client);
+        return new Calendar($client);
     }
 }
