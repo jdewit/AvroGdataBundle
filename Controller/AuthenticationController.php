@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Zend\Gdata\HttpClient;
 
 /**
  * Service controller.
@@ -29,9 +28,10 @@ class AuthenticationController extends ContainerAware
 
         try {
             $client = $this->container->get('avro_gdata.authenticator')->getClient($username, $password, false);
-
-            if ($client instanceof HttpClient) {
+            if ($client instanceof \Zend_Gdata_HttpClient) {
                 $response = new Response('{"status": "OK", "notice": "Connected!"}');
+            } else {
+                $response = new Response('{"status": "FAIL", "notice": "Invalid google credentials."}');
             }
         } catch (\Exception $e) {
             $response = new Response('{"status": "FAIL", "notice": '.json_encode($e->getMessage()).'}');

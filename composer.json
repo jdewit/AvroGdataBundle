@@ -2,7 +2,7 @@
     "name": "avro/gdata-bundle",
     "type": "symfony-bundle",
     "description": "Symfony2 Gdata Bundle",
-    "keywords": ["gdata"],
+    "keywords": ["gdataBundle, zf1, symfony2"],
     "homepage": "http://github.com/jdewit/AvroGdataBundle",
     "license": "MIT",
     "authors": [
@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "breerly/zf1": "dev-master"
     },
     "autoload": {
         "psr-0": { "Avro\\GdataBundle": "" }

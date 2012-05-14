@@ -2,7 +2,6 @@
 namespace Avro\GdataBundle\Util;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Zend\Gdata\App;
 
 /*
  * Helper class for Zend Gdata Calendar
@@ -61,7 +60,6 @@ class CalendarManager
      */
     public function editEvent($service, $options) {
         $event = $this->getEvent($service, $options['id']);
-        print_r($event); exit;
         $event = $this->writeEvent($service, $event, $options);
 
         try {
