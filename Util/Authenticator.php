@@ -28,25 +28,25 @@ class Authenticator
      * @return Zend_Gdata_HttpClient
      */
     public function getClient($username, $password, $decrypt = true) {
-        if (!$username || !$password) { 
+        if (!$username || !$password) {
             throw new \Exception('Invalid username\password');
         }
 
         if ($decrypt) {
             $password = $this->encrypter->decrypt($password);
         }
-    
+
         try {
             $client = \Zend_Gdata_ClientLogin::getHttpClient($username, $password, \Zend_Gdata_Calendar::AUTH_SERVICE_NAME);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
 
-        return $client; 
+        return $client;
     }
 
     /*
-     * Get Calendar Service 
+     * Get Calendar Service
      *
      * @param $username
      * @param $password
@@ -54,6 +54,13 @@ class Authenticator
      * @return Calendar Service
      */
     public function getCalendarService($username, $password) {
+        if (!$username) {
+            throw new \Exception('Error adding event to calendar. No username provided.');
+        }
+        if (!$password) {
+            throw new \Exception('Error adding event to calendar. No password provided.');
+        }
+
         $client = $this->getClient($username, $password);
 
         return new \Zend_Gdata_Calendar($client);
