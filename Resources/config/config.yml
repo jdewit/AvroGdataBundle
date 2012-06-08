@@ -3,6 +3,6 @@ services:
         class: Avro\GdataBundle\Util\Authenticator
         arguments: ["@pierrre_encrypter.manager"]
 
-    avro_gdata.calendar.manager:
+    avro_gdata.calendar_manager:
         class: Avro\GdataBundle\Util\CalendarManager
 

@@ -20,19 +20,19 @@ Get calendar service
 Create a new event
 
 ``` php
-    $this->container->get('avro_gdata.calendar.manager')->createEvent($service, $options);
+    $this->container->get('avro_gdata.calendar_manager')->createEvent($service, $options);
 ```
 
 Edit an event
 
 ``` php
-    $this->container->get('avro_gdata.calendar.manager')->editEvent($service, $options);
+    $this->container->get('avro_gdata.calendar_manager')->editEvent($service, $options);
 ```
 
 Delete an event
 
 ``` php
-    $this->container->get('avro_gdata.calendar.manager')->deleteEvent($service, $options);
+    $this->container->get('avro_gdata.calendar_manager')->deleteEvent($service, $options);
 ```
 
 Requirements
