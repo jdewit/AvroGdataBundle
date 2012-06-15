@@ -15,7 +15,7 @@ class CalendarManager
      *
      * @param Calendar Service Instance $service
      *
-     * @return array $listFeed 
+     * @return array $listFeed
      */
     public function getCalendarListFeed($service) {
         try {
@@ -32,21 +32,22 @@ class CalendarManager
      *
      * @param Calendar Service Instance $service
      * @param array $options
+     * @param string $uri
      *
-     * @return string $id the calendars id 
+     * @return string $id the calendars id
      */
-    public function createEvent($service, array $options) {
+    public function createEvent($service, array $options, $uri = null) {
         $event= $service->newEventEntry();
         $event = $this->writeEvent($service, $event, $options);
-         
+
         try {
-            $event = $service->insertEvent($event);
+            $event = $service->insertEvent($event, $uri);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
         $url =  $event->id->text;
         $id = explode("/", $url);
-        
+
         return array_pop($id);
     }
 
@@ -90,11 +91,11 @@ class CalendarManager
             $event = $service->getCalendarEventEntry($query);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
-        }        
-        
+        }
+
         return $event;
     }
-        
+
     /*
      * Write an event
      *
@@ -136,7 +137,7 @@ class CalendarManager
             $this->getEvent($service, $id)->delete();
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
-        }     
+        }
 
         return true;
     }
@@ -151,7 +152,7 @@ class CalendarManager
     public function convertTime($time) {
         if (substr($time, 7, 7) == 'm') {
             $time = DATE("H:i", STRTOTIME($time));
-        } 
+        }
 
         return $time;
     }
