@@ -60,10 +60,9 @@ class CalendarManager
      * @return boolean true
      */
     public function editEvent($service, $options) {
-        $event = $this->getEvent($service, $options['id']);
-        $event = $this->writeEvent($service, $event, $options);
-
         try {
+            $event = $this->getEvent($service, $options['id']);
+            $event = $this->writeEvent($service, $event, $options);
             $event->save();
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
