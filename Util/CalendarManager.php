@@ -36,14 +36,20 @@ class CalendarManager
      *
      * @return string $id the calendars id
      */
-    public function createEvent($service, array $options, $uri = null) {
+    public function createEvent($service, array $options, $id = null) {
         $event= $service->newEventEntry();
         $event = $this->writeEvent($service, $event, $options);
+
+        if ($id != null) {
+            $uri = 'https://www.google.com/calendar/feeds/'.$id.'%40group.calendar.google.com/private/full';
+        } else {
+            $uri = null;
+        }
 
         try {
             $event = $service->insertEvent($event, $uri);
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw new \Exception('Error creating event. Verify your google credentials or calendar id');
         }
         $url =  $event->id->text;
         $id = explode("/", $url);
